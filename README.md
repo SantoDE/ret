@@ -4,7 +4,7 @@ If you're using Rancher in combination with e.g. [AWS Auto Scaling Groups](https
 
 Therfore seamless autoscaling with new Agent-Hosts will become tricky as they can't join the environment.
 
-RRT (Rancher Registration Token) will help you solve this issue.
+RET will help you solve this issue.
 
 By only providing:
 
