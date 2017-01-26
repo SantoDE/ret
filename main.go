@@ -2,9 +2,10 @@ package main
 
 import (
 "os"
-
 "github.com/urfave/cli"
+rancher "github.com/rancher/go-rancher/client"
 "errors"
+"fmt"
 )
 
 func main() {
@@ -36,6 +37,7 @@ func main() {
 		var rancherSecretKey		= c.String("secret-key")
 		var rancherEnvironmentId	= c.String("environment-id")
 
+		var registrationToken 		= ""
 
 		if rancherApiUrl == "" {
 			return errors.New("You have to provide an url by using --api-url")
@@ -51,6 +53,34 @@ func main() {
 
 		if rancherEnvironmentId == "" {
 			return errors.New("You have to provide an url by using --environment-id")
+		}
+
+		client, err := rancher.NewRancherClient(&rancher.ClientOpts{
+			Url:       rancherApiUrl,
+			AccessKey: rancherAccessKey,
+			SecretKey: rancherSecretKey,
+		})
+
+			if (err != nil) {
+			fmt.Printf("Error creating Rancher Client %s", err)
+		}
+
+		registrationTokens, err := client.RegistrationToken.List(nil)
+
+		if (err != nil) {
+			fmt.Printf("Error fetching Tokens")
+		}
+
+		for _, token := range registrationTokens.Data {
+			if (token.AccountId == rancherEnvironmentId) {
+				registrationToken = token.Token
+			}
+		}
+
+		if(registrationToken != "") {
+			fmt.Printf(registrationToken)
+		} else {
+			return errors.New("No token found for the given Envirionment " + rancherEnvironmentId)
 		}
 
 		return nil
