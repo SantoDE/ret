@@ -14,18 +14,22 @@ func main() {
 		cli.StringFlag{
 			Name: "api-url",
 			Usage: "URL to your rancher API",
+			EnvVar: "RANCHER_API_URL",
 		},
 		cli.StringFlag{
 			Name: "access-key",
 			Usage: "The access key for your API",
+			EnvVar: "RANCHER_ACCESS_KEY",
 		},
 		cli.StringFlag{
 			Name: "secret-key",
 			Usage: "The secret key for your API",
+			EnvVar: "RANCHER_SECRET_KEY",
 		},
 		cli.StringFlag{
 			Name: "environment-id",
 			Usage: "The Environment Id to get the token for",
+			EnvVar: "RANCHER_ENVIRONMENT_ID",
 		},
 	}
 	app.Name = "ret - Rancher Environment Token"
@@ -61,23 +65,23 @@ func main() {
 			SecretKey: rancherSecretKey,
 		})
 
-			if (err != nil) {
+		if err != nil {
 			fmt.Printf("Error creating Rancher Client %s", err)
 		}
 
 		registrationTokens, err := client.RegistrationToken.List(nil)
 
-		if (err != nil) {
+		if err != nil {
 			fmt.Printf("Error fetching Tokens")
 		}
 
 		for _, token := range registrationTokens.Data {
-			if (token.AccountId == rancherEnvironmentId) {
+			if token.AccountId == rancherEnvironmentId {
 				registrationToken = token.Token
 			}
 		}
 
-		if(registrationToken != "") {
+		if registrationToken != "" {
 			fmt.Printf(registrationToken)
 		} else {
 			return errors.New("No token found for the given Envirionment " + rancherEnvironmentId)
