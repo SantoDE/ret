@@ -1,4 +1,5 @@
-FROM scratch
+FROM golang:1.7-onbuild
 MAINTAINER Manuel Laufenberg <hello@manuel-laufenberg.de>
-COPY dist/ret /
-ENTRYPOINT ["/ret"]
+#ADD ca-certificates.crt /etc/ssl/certs/
+#COPY dist/ret /
+#ENTRYPOINT ["/ret"]
